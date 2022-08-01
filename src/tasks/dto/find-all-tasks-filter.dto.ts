@@ -1,4 +1,5 @@
-import { IsInt } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsInt } from 'class-validator';
 
 export class FindAllTasksFilterDto {
   @IsInt()
@@ -7,10 +8,29 @@ export class FindAllTasksFilterDto {
   @IsInt()
   amount: number = 10;
 
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  paginate: boolean = true;
+
   getPaginationParams() {
+    if (!this.paginate) {
+      return {};
+    }
+
     return {
       skip: (this.page - 1) * this.amount,
       take: this.amount,
+    };
+  }
+
+  getResponseParams() {
+    if (!this.paginate) {
+      return {};
+    }
+
+    return {
+      page: this.page,
+      amount: this.amount,
     };
   }
 }

@@ -26,7 +26,7 @@ export class TasksService {
     );
 
     return {
-      ...filters,
+      ...filters.getResponseParams(),
       count,
       values,
     };
